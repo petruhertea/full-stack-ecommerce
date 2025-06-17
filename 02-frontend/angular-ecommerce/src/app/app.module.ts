@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,7 +16,15 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 
-import { provideAuth0 } from '@auth0/auth0-angular';
+import { LoginComponent } from './components/login/login.component';
+import { MembersPageComponent } from './components/members-page/members-page.component';
+import { OKTA_CONFIG, OktaAuthModule } from '@okta/okta-angular';
+import myAppConfig from './config/my-app-config';
+import OktaAuth from '@okta/okta-auth-js';
+
+const oktaConfig = myAppConfig.oidc;
+
+const oktaAuth = new OktaAuth(oktaConfig);
 
 @NgModule({
   declarations: [
@@ -28,25 +36,22 @@ import { provideAuth0 } from '@auth0/auth0-angular';
     CartStatusComponent,
     CartDetailsComponent,
     CheckoutComponent,
-    LoginStatusComponent
+    LoginStatusComponent,
+    LoginComponent,
+    MembersPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     ReactiveFormsModule,
+    OktaAuthModule
   ],
   providers: [
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
     ProductService,
-    provideAuth0({
-      domain: 'dev-wqk5k2oz71n6vwbx.us.auth0.com',
-      clientId: '7IXQNRWGogtgOhsjD6znJVvK83D3ke8t',
-      authorizationParams: {
-        redirect_uri: window.location.origin
-      }
-    }),
+    { provide: OKTA_CONFIG, useValue: { oktaAuth }}
   ],
   bootstrap: [AppComponent]
 })
