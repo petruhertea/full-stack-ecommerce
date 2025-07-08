@@ -5,14 +5,14 @@ export default {
     domain: environment.auth0Domain,
     clientId: environment.auth0ClientId,
     authorizationParams: {
-      redirect_uri: "http://localhost:4200",
-      audience: "http://localhost:8080",
+      redirect_uri: "https://localhost:4200",
+      audience: "https://localhost:8443",
     },
   },
   httpInterceptor: {
     allowedList: [
-      'http://localhost:8080/api/orders/**',
-      'http://localhost:8080/api/checkout/purchase'
+      'https://localhost:8443/api/orders/**',
+      'https://localhost:8443/api/checkout/purchase'
     ],
   }
 }
