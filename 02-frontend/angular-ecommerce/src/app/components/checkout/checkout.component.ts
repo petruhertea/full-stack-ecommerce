@@ -21,6 +21,7 @@ import { Purchase } from '../../common/purchase';
 export class CheckoutComponent implements OnInit {
 
   checkoutFormGroup!: FormGroup;
+  storage: Storage = sessionStorage;
 
   totalPrice: number = 0;
   totalQuantity: number = 0;
@@ -43,6 +44,8 @@ export class CheckoutComponent implements OnInit {
 
     let startMonth: number = new Date().getMonth() + 1;
     console.log(`Start month: ${startMonth}`);
+
+    const userEmail: string = JSON.parse(this.storage.getItem('userEmail')!);
 
     this.luv2shopFormService.getCountries().subscribe(
       data => {
@@ -77,7 +80,7 @@ export class CheckoutComponent implements OnInit {
           Validators.minLength(2),
           Luv2ShopValidators.notOnlyWhitespace]),
 
-        email: new FormControl('', [
+        email: new FormControl(userEmail, [
           Validators.required,
           Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"),
           Luv2ShopValidators.notOnlyWhitespace])

@@ -1,10 +1,18 @@
-import { environment } from "../../environments/environment";
+import { environment } from "../../environments/environment"
 
 export default {
-    oidc: {
-        clientId: environment.oktaClientId,
-        issuer: environment.oktaIssuer,
-        redirectUri: environment.oktaRedirectUri,
-        scopes: ['openid', 'profile', 'email']
-    }
+  auth: {
+    domain: environment.auth0Domain,
+    clientId: environment.auth0ClientId,
+    authorizationParams: {
+      redirect_uri: "http://localhost:4200",
+      audience: "http://localhost:8080",
+    },
+  },
+  httpInterceptor: {
+    allowedList: [
+      'http://localhost:8080/api/orders/**',
+      'http://localhost:8080/api/checkout/purchase'
+    ],
+  }
 }

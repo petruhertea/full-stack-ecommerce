@@ -1,11 +1,9 @@
 package com.luv2code.ecommerce.config;
 
-import com.luv2code.ecommerce.entity.Country;
-import com.luv2code.ecommerce.entity.Product;
-import com.luv2code.ecommerce.entity.ProductCategory;
-import com.luv2code.ecommerce.entity.State;
+import com.luv2code.ecommerce.entity.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.EntityType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -21,6 +19,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     private EntityManager entityManager;
 
+    @Value("${allowed.origins}")
+    private String[] allowedOrigins;
+
     MyDataRestConfig(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -31,11 +32,15 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         HttpMethod[] unsupportedActions = {HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE, HttpMethod.PUT};
 
+        // configure cors mapping
+        cors.addMapping(config.getBasePath() + "/**").allowedOrigins(allowedOrigins);
+
         // disable HTTP methods for PUT, PATCH, POST, DELETE
         disableHttpMethods(Product.class, config, unsupportedActions);
         disableHttpMethods(ProductCategory.class, config, unsupportedActions);
         disableHttpMethods(Country.class, config, unsupportedActions);
         disableHttpMethods(State.class, config, unsupportedActions);
+        disableHttpMethods(Order.class, config, unsupportedActions);
 
 
         // call an internal helper method
